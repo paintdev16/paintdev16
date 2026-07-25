@@ -1,0 +1,272 @@
+---
+// NavBar.astro
+import { Menu, X } from "lucide-astro";
+import Theme from "./Theme.astro";
+
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  links?: NavLink[];
+  logoText?: string;
+  currentPath?: string;
+}
+
+const {
+  links = [
+    { label: "Inicio", href: "/" },
+    { label: "Artículos", href: "/article" },
+    { label: "Categorías", href: "/categorias" },
+    { label: "Acerca", href: "/acerca" },
+  ],
+  logoText = "Paintdev16",
+  currentPath = Astro.url.pathname,
+} = Astro.props;
+---
+
+<!-- Checkbox hack para el menú móvil sin JS -->
+<input type="checkbox" id="menu-toggle" class="sr-only" />
+
+<header class="fixed inset-x-0 top-0 z-50" id="site-header">
+  <nav
+    class="mx-auto flex h-[4.5rem] w-full items-center justify-between border-b border-border bg-background/70 px-6 backdrop-blur-2xl backdrop-saturate-150 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+    aria-label="Navegación principal"
+  >
+    <!-- Logo -->
+    <a
+      href="/"
+      class="group relative flex shrink-0 items-center gap-3 rounded-xl py-2 pl-1.5 pr-3 text-sm font-bold tracking-tight text-foreground outline-none transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    >
+      <span
+        class="logo-mark relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-primary text-xs font-bold text-primary-foreground shadow-sm transition-all duration-300 ease-out group-hover:-rotate-2 group-hover:scale-105 group-hover:shadow-md"
+      >
+        {logoText.charAt(0).toUpperCase()}
+      </span>
+      <span class="hidden text-base font-semibold tracking-tight sm:inline">
+        {logoText}
+      </span>
+    </a>
+
+    <!-- Links desktop -->
+    <ul
+      class="relative hidden items-center gap-1 rounded-full bg-muted p-1 md:flex"
+      role="list"
+    >
+      {
+        links.map((link) => {
+          const isActive =
+            link.href === "/"
+              ? currentPath === "/"
+              : currentPath.startsWith(link.href);
+          return (
+            <li class="relative">
+              <a
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "relative block rounded-full px-4 py-2 text-[13px] font-medium tracking-wide outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                  isActive
+                    ? "bg-primary-alpha text-primary shadow-sm ring-1 ring-primary-border"
+                    : "text-muted-foreground hover:bg-surface-alpha hover:text-foreground",
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <!-- Acciones -->
+    <div class="flex items-center gap-1">
+      <Theme />
+
+      <a
+        href="/contacto"
+        class="hidden items-center gap-1.5 rounded-lg bg-foreground px-4 py-2 text-[13px] font-medium text-background shadow-sm outline-none transition-all duration-200 hover:opacity-90 hover:shadow active:scale-95 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:inline-flex"
+      >
+        Contacto
+      </a>
+
+      <label
+        for="menu-toggle"
+        id="menu-toggle-label"
+        class="menu-toggle-label relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-muted-foreground transition-all duration-200 hover:bg-muted hover:text-foreground active:scale-95 md:hidden"
+      >
+        <span class="sr-only">Abrir o cerrar menú</span>
+        <Menu
+          class="menu-icon-open size-[18px] transition-all duration-200"
+          aria-hidden="true"
+        />
+        <X
+          class="menu-icon-close absolute size-[18px] transition-all duration-200"
+          aria-hidden="true"
+        />
+      </label>
+    </div>
+  </nav>
+
+  <!-- Panel móvil -->
+  <div
+    id="mobile-panel"
+    class="absolute inset-x-0 top-full overflow-hidden border-b border-border bg-surface/95 backdrop-blur-2xl transition-[max-height,opacity] duration-300 ease-out md:hidden"
+  >
+    <div class="p-3">
+      <ul class="flex flex-col gap-1" role="list">
+        {
+          links.map((link) => {
+            const isActive =
+              link.href === "/"
+                ? currentPath === "/"
+                : currentPath.startsWith(link.href);
+            return (
+              <li>
+                <a
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  class:list={[
+                    "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium outline-none transition-all duration-200 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                    isActive
+                      ? "bg-primary-alpha text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  ]}
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+      <div class="mt-2 border-t border-border pt-2">
+        <a
+          href="/contacto"
+          class="flex w-full items-center justify-center gap-1.5 rounded-xl bg-foreground px-4 py-3 text-sm font-medium text-background outline-none transition-all duration-200 hover:opacity-90 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          Contacto
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Spacer estático -->
+<div class="h-[4.5rem]" aria-hidden="true"></div>
+
+<style>
+  /* Mostrar/ocultar panel móvil */
+  #menu-toggle:checked ~ header #mobile-panel {
+    max-height: 500px;
+    opacity: 1;
+  }
+  #menu-toggle:not(:checked) ~ header #mobile-panel {
+    max-height: 0px;
+    opacity: 0;
+  }
+
+  /* Animación de iconos hamburguesa ↔ cerrar */
+  #menu-toggle:checked ~ header .menu-icon-open {
+    transform: scale(0) rotate(90deg);
+    opacity: 0;
+  }
+  #menu-toggle:not(:checked) ~ header .menu-icon-open {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  #menu-toggle:checked ~ header .menu-icon-close {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  #menu-toggle:not(:checked) ~ header .menu-icon-close {
+    transform: scale(0) rotate(-90deg);
+    opacity: 0;
+  }
+
+  /* Entrada escalonada de los links al abrir el panel móvil */
+  @keyframes menu-item-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  #menu-toggle:checked ~ header #mobile-panel li {
+    animation: menu-item-in 220ms ease-out both;
+  }
+  #menu-toggle:checked ~ header #mobile-panel li:nth-child(1) {
+    animation-delay: 40ms;
+  }
+  #menu-toggle:checked ~ header #mobile-panel li:nth-child(2) {
+    animation-delay: 80ms;
+  }
+  #menu-toggle:checked ~ header #mobile-panel li:nth-child(3) {
+    animation-delay: 120ms;
+  }
+  #menu-toggle:checked ~ header #mobile-panel li:nth-child(4) {
+    animation-delay: 160ms;
+  }
+  #menu-toggle:checked ~ header #mobile-panel li:nth-child(n + 5) {
+    animation-delay: 200ms;
+  }
+
+  /* El foco real vive en el checkbox (sr-only), no en el <label>.
+     Reflejamos el anillo de foco sobre el ícono visible cuando se navega
+     con teclado hasta el checkbox. */
+  #menu-toggle:focus-visible ~ header .menu-toggle-label {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Doblez de página en el logo — guiño a "bitácora" */
+  .logo-mark::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 7px 7px 0;
+    border-color: transparent oklch(from var(--primary-foreground) l c h / 0.4)
+      transparent transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #site-header,
+    #site-header *,
+    #mobile-panel,
+    #mobile-panel * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+
+<script>
+  // Cierra el menú móvil al hacer clic fuera del panel o del botón que lo abre.
+  const toggle = document.getElementById(
+    "menu-toggle",
+  ) as HTMLInputElement | null;
+  const panel = document.getElementById("mobile-panel");
+  const toggleLabel = document.getElementById("menu-toggle-label");
+
+  document.addEventListener("click", (event) => {
+    if (!toggle?.checked) return;
+
+    const target = event.target as Node;
+    const clickedInsidePanel = panel?.contains(target);
+    const clickedToggle = target === toggle || toggleLabel?.contains(target);
+
+    if (!clickedInsidePanel && !clickedToggle) {
+      toggle.checked = false;
+    }
+  });
+</script>

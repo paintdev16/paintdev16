@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+:root {
+    color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+/* Mientras se aplica un cambio de tema, se suspenden todas las
+   transiciones para que el cambio de color sea instantáneo y
+   sincronizado en toda la página (evita el parpadeo por transiciones
+   con duraciones distintas terminando en momentos distintos). */
+.theme-transition-lock,
+.theme-transition-lock * {
+    transition: none !important;
+}
+
+:root {
+
+    /* ---------- NEUTROS BASE ---------- */
+    --background:        light-dark(oklch(98% 0.012 280), oklch(14% 0.030 280));
+    --foreground:        light-dark(oklch(19% 0.030 280), oklch(96% 0.012 280));
+
+    /* ---------- SURFACE (cards, contenedores neutros) ---------- */
+    --surface:              light-dark(oklch(100% 0 0), oklch(18% 0.025 280));
+    --surface-foreground:   light-dark(oklch(19% 0.030 280), oklch(96% 0.012 280));
+    --surface-alpha:        oklch(from var(--surface) l c h / .6);
+    --surface-border:       oklch(from var(--foreground) l c h / .1);
+
+    /* ---------- MUTED (texto secundario, metadatos, fechas) ---------- */
+    --muted:                light-dark(oklch(94% 0.008 280), oklch(24% 0.02 280));
+    --muted-foreground:     light-dark(oklch(46% 0.015 280), oklch(66% 0.015 280));
+    --muted-alpha:          oklch(from var(--muted) l c h / .5);
+
+    /* ---------- BORDER genérico ---------- */
+    --border:               oklch(from var(--foreground) l c h / .12);
+    --border-strong:        oklch(from var(--foreground) l c h / .22);
+    --ring:                 oklch(from var(--primary) l c h / .5);
+
+    /* ---------- PRIMARY ---------- */
+    --primary:                     light-dark(oklch(58% 0.18 38), oklch(78% 0.16 38));
+    --primary-foreground:          light-dark(oklch(98% 0.01 38), oklch(16% 0.02 38));
+    --primary-container:           light-dark(oklch(94% 0.04 38), oklch(35% 0.08 38));
+    --primary-container-foreground: light-dark(oklch(30% 0.09 38), oklch(92% 0.05 38));
+    --primary-subtle:              light-dark(oklch(97% 0.02 38), oklch(28% 0.05 38));
+    --primary-subtle-foreground:   light-dark(oklch(40% 0.07 38), oklch(82% 0.06 38));
+    --primary-alpha:               oklch(from var(--primary) l c h / .16);
+    --primary-border:              oklch(from var(--primary) l c h / .22);
+    --primary-card:                light-dark(oklch(96% 0.03 38), oklch(24% 0.06 38));
+    --primary-card-foreground:     light-dark(oklch(25% 0.08 38), oklch(90% 0.04 38));
+    --primary-card-border:         oklch(from var(--primary) l c h / .18);
+
+    /* ---------- SECONDARY (categorías, tags, acentos secundarios) ---------- */
+    --secondary:                    light-dark(oklch(55% 0.14 260), oklch(75% 0.13 260));
+    --secondary-foreground:         light-dark(oklch(98% 0.01 260), oklch(16% 0.02 260));
+    --secondary-container:          light-dark(oklch(94% 0.03 260), oklch(32% 0.07 260));
+    --secondary-container-foreground: light-dark(oklch(30% 0.08 260), oklch(92% 0.04 260));
+    --secondary-alpha:              oklch(from var(--secondary) l c h / .14);
+    --secondary-border:             oklch(from var(--secondary) l c h / .2);
+
+    /* ---------- SUCCESS (publicado, guardado, confirmaciones) ---------- */
+    --success:                      light-dark(oklch(55% 0.15 145), oklch(72% 0.16 145));
+    --success-foreground:           light-dark(oklch(98% 0.01 145), oklch(16% 0.02 145));
+    --success-container:            light-dark(oklch(93% 0.05 145), oklch(30% 0.07 145));
+    --success-container-foreground: light-dark(oklch(28% 0.09 145), oklch(90% 0.05 145));
+    --success-alpha:                oklch(from var(--success) l c h / .14);
+    --success-border:               oklch(from var(--success) l c h / .2);
+
+    /* ---------- DANGER (borrar, error, validación) ---------- */
+    --danger:                       light-dark(oklch(55% 0.21 25), oklch(72% 0.17 25));
+    --danger-foreground:            light-dark(oklch(98% 0.01 25), oklch(16% 0.02 25));
+    --danger-container:             light-dark(oklch(93% 0.06 25), oklch(32% 0.09 25));
+    --danger-container-foreground:  light-dark(oklch(30% 0.11 25), oklch(92% 0.05 25));
+    --danger-alpha:                 oklch(from var(--danger) l c h / .14);
+    --danger-border:                oklch(from var(--danger) l c h / .2);
+
+    /* ---------- WARNING (borrador, pendiente) ---------- */
+    --warning:                      light-dark(oklch(72% 0.16 85), oklch(80% 0.15 85));
+    --warning-foreground:           light-dark(oklch(20% 0.05 85), oklch(18% 0.03 85));
+    --warning-container:            light-dark(oklch(93% 0.06 85), oklch(32% 0.08 85));
+    --warning-container-foreground: light-dark(oklch(32% 0.1 85), oklch(90% 0.06 85));
+    --warning-alpha:                oklch(from var(--warning) l c h / .16);
+    --warning-border:               oklch(from var(--warning) l c h / .22);
+
+    /* ---------- INFO (avisos, tips en el post) ---------- */
+    --info:                         light-dark(oklch(58% 0.14 235), oklch(76% 0.13 235));
+    --info-foreground:              light-dark(oklch(98% 0.01 235), oklch(16% 0.02 235));
+    --info-container:               light-dark(oklch(93% 0.04 235), oklch(32% 0.07 235));
+    --info-container-foreground:    light-dark(oklch(28% 0.09 235), oklch(90% 0.05 235));
+    --info-alpha:                   oklch(from var(--info) l c h / .14);
+    --info-border:                  oklch(from var(--info) l c h / .2);
+
+    /* ---------- CONTENIDO DE BLOG (prosa, links, código, citas) ---------- */
+    --link:                 var(--primary);
+    --link-hover:            oklch(from var(--primary) calc(l - 0.08) c h);
+    --link-alpha:             oklch(from var(--primary) l c h / .1);
+
+    --code-background:      oklch(from var(--foreground) l c h / .06);
+    --code-foreground:      light-dark(oklch(40% 0.13 320), oklch(82% 0.1 320));
+    --code-border:           oklch(from var(--foreground) l c h / .1);
+
+    --blockquote-border:    var(--primary-border);
+    --blockquote-foreground: var(--muted-foreground);
+    --blockquote-alpha:      oklch(from var(--primary) l c h / .06);
+
+    --primary-hover:   oklch(from var(--primary)   calc(l - 0.06) c h);
+--secondary-hover: oklch(from var(--secondary) calc(l - 0.06) c h);
+--success-hover:   oklch(from var(--success)   calc(l - 0.06) c h);
+--danger-hover:    oklch(from var(--danger)    calc(l - 0.06) c h);
+--warning-hover:   oklch(from var(--warning)   calc(l - 0.06) c h);
+--info-hover:      oklch(from var(--info)      calc(l - 0.06) c h);
+
+}
+
+@theme inline {
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-surface: var(--surface);
+    --color-surface-foreground: var(--surface-foreground);
+    --color-surface-alpha: var(--surface-alpha);
+    --color-surface-border: var(--surface-border);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted-alpha: var(--muted-alpha);
+
+    --color-border: var(--border);
+    --color-border-strong: var(--border-strong);
+    --color-ring: var(--ring);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary-container: var(--primary-container);
+    --color-primary-container-foreground: var(--primary-container-foreground);
+    --color-primary-subtle: var(--primary-subtle);
+    --color-primary-subtle-foreground: var(--primary-subtle-foreground);
+    --color-primary-alpha: var(--primary-alpha);
+    --color-primary-border: var(--primary-border);
+    --color-primary-card: var(--primary-card);
+    --color-primary-card-foreground: var(--primary-card-foreground);
+    --color-primary-card-border: var(--primary-card-border);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary-container: var(--secondary-container);
+    --color-secondary-container-foreground: var(--secondary-container-foreground);
+    --color-secondary-alpha: var(--secondary-alpha);
+    --color-secondary-border: var(--secondary-border);
+
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-success-container: var(--success-container);
+    --color-success-container-foreground: var(--success-container-foreground);
+    --color-success-alpha: var(--success-alpha);
+    --color-success-border: var(--success-border);
+
+    --color-danger: var(--danger);
+    --color-danger-foreground: var(--danger-foreground);
+    --color-danger-container: var(--danger-container);
+    --color-danger-container-foreground: var(--danger-container-foreground);
+    --color-danger-alpha: var(--danger-alpha);
+    --color-danger-border: var(--danger-border);
+
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-warning-container: var(--warning-container);
+    --color-warning-container-foreground: var(--warning-container-foreground);
+    --color-warning-alpha: var(--warning-alpha);
+    --color-warning-border: var(--warning-border);
+
+    --color-info: var(--info);
+    --color-info-foreground: var(--info-foreground);
+    --color-info-container: var(--info-container);
+    --color-info-container-foreground: var(--info-container-foreground);
+    --color-info-alpha: var(--info-alpha);
+    --color-info-border: var(--info-border);
+
+    --color-link: var(--link);
+    --color-link-hover: var(--link-hover);
+    --color-link-alpha: var(--link-alpha);
+
+    --color-code-background: var(--code-background);
+    --color-code-foreground: var(--code-foreground);
+    --color-code-border: var(--code-border);
+
+    --color-blockquote-border: var(--blockquote-border);
+    --color-blockquote-foreground: var(--blockquote-foreground);
+    --color-blockquote-alpha: var(--blockquote-alpha);
+
+--color-primary-hover: var(--primary-hover);
+--color-secondary-hover: var(--secondary-hover);
+--color-success-hover: var(--success-hover);
+--color-danger-hover: var(--danger-hover);
+--color-warning-hover: var(--warning-hover);
+--color-info-hover: var(--info-hover);
+}
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+}

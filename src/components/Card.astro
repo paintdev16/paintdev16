@@ -1,0 +1,308 @@
+---
+// Card.astro
+import { tv, type VariantProps } from "tailwind-variants";
+
+const card = tv({
+  base: [
+    "group relative rounded-2xl",
+    "p-4 sm:p-5 lg:p-6",
+    "border",
+    "bg-gradient-to-br",
+    "shadow-md",
+    "text-foreground",
+    "transition-all duration-300 ease-out",
+    "hover:shadow-xl hover:-translate-y-0.5",
+    "overflow-hidden",
+  ],
+  variants: {
+    variant: {
+      primary: [
+        "border-primary/15",
+        "from-primary-container/80 to-primary-container/40",
+        "shadow-primary/5",
+        "hover:shadow-primary/20 hover:border-primary/30",
+      ],
+      secondary: [
+        "border-secondary/15",
+        "from-secondary-container/80 to-secondary-container/40",
+        "shadow-secondary/5",
+        "hover:shadow-secondary/20 hover:border-secondary/30",
+      ],
+      success: [
+        "border-success/15",
+        "from-success-container/80 to-success-container/40",
+        "shadow-success/5",
+        "hover:shadow-success/20 hover:border-success/30",
+      ],
+      danger: [
+        "border-danger/15",
+        "from-danger-container/80 to-danger-container/40",
+        "shadow-danger/5",
+        "hover:shadow-danger/20 hover:border-danger/30",
+      ],
+      warning: [
+        "border-warning/15",
+        "from-warning-container/80 to-warning-container/40",
+        "shadow-warning/5",
+        "hover:shadow-warning/20 hover:border-warning/30",
+      ],
+      info: [
+        "border-info/15",
+        "from-info-container/80 to-info-container/40",
+        "shadow-info/5",
+        "hover:shadow-info/20 hover:border-info/30",
+      ],
+      neutral: [
+        "border-border/50",
+        "from-surface to-surface/60",
+        "shadow-black/5",
+        "hover:shadow-black/10 hover:border-foreground/20",
+      ],
+    },
+    size: {
+      sm: "p-3 sm:p-4",
+      md: "p-4 sm:p-5 lg:p-6",
+      lg: "p-5 sm:p-6 lg:p-8",
+    },
+    interactive: {
+      true: "cursor-pointer active:scale-[0.99]",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    variant: "primary",
+    size: "md",
+    interactive: false,
+  },
+});
+
+const accent = tv({
+  base: [
+    "inline-flex items-center justify-center rounded-xl shrink-0",
+    "transition-transform duration-300 group-hover:scale-110",
+    "[&_svg]:shrink-0",
+  ],
+  variants: {
+    variant: {
+      primary: "text-primary bg-primary/10 ring-1 ring-primary/20",
+      secondary: "text-secondary bg-secondary/10 ring-1 ring-secondary/20",
+      success: "text-success bg-success/10 ring-1 ring-success/20",
+      danger: "text-danger bg-danger/10 ring-1 ring-danger/20",
+      warning: "text-warning bg-warning/10 ring-1 ring-warning/20",
+      info: "text-info bg-info/10 ring-1 ring-info/20",
+      neutral: "text-muted-foreground bg-muted ring-1 ring-border",
+    },
+    size: {
+      sm: "w-7 h-7 text-sm sm:w-8 sm:h-8 [&_svg]:size-4",
+      md: "w-8 h-8 text-sm sm:w-10 sm:h-10 sm:text-base [&_svg]:size-4 sm:[&_svg]:size-5",
+      lg: "w-9 h-9 text-base sm:w-12 sm:h-12 sm:text-lg [&_svg]:size-5 sm:[&_svg]:size-6",
+    },
+  },
+  defaultVariants: {
+    variant: "primary",
+    size: "md",
+  },
+});
+
+const badge = tv({
+  base: "inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-medium",
+  variants: {
+    variant: {
+      primary: "bg-primary/10 text-primary ring-1 ring-primary/20",
+      secondary: "bg-secondary/10 text-secondary ring-1 ring-secondary/20",
+      success: "bg-success/10 text-success ring-1 ring-success/20",
+      danger: "bg-danger/10 text-danger ring-1 ring-danger/20",
+      warning: "bg-warning/10 text-warning ring-1 ring-warning/20",
+      info: "bg-info/10 text-info ring-1 ring-info/20",
+      neutral: "bg-muted text-muted-foreground ring-1 ring-border",
+    },
+  },
+  defaultVariants: {
+    variant: "primary",
+  },
+});
+
+type CardVariants = VariantProps<typeof card>;
+type AccentVariants = VariantProps<typeof accent>;
+type BadgeVariants = VariantProps<typeof badge>;
+type ColorVariant = NonNullable<CardVariants["variant"]>;
+
+// Antes: tres bloques `class:list` con la misma cadena de
+// `variant === "primary" && "..."` repetida (glow, ring, divisor).
+// Ahora: un único mapa de color -> clases, usado en los tres sitios.
+const ACCENT: Record<
+  ColorVariant,
+  { glow: string; ring: string; divider: string }
+> = {
+  primary: {
+    glow: "bg-primary",
+    ring: "ring-primary/20",
+    divider: "from-primary/30",
+  },
+  secondary: {
+    glow: "bg-secondary",
+    ring: "ring-secondary/20",
+    divider: "from-secondary/30",
+  },
+  success: {
+    glow: "bg-success",
+    ring: "ring-success/20",
+    divider: "from-success/30",
+  },
+  danger: {
+    glow: "bg-danger",
+    ring: "ring-danger/20",
+    divider: "from-danger/30",
+  },
+  warning: {
+    glow: "bg-warning",
+    ring: "ring-warning/20",
+    divider: "from-warning/30",
+  },
+  info: { glow: "bg-info", ring: "ring-info/20", divider: "from-info/30" },
+  neutral: {
+    glow: "bg-foreground",
+    ring: "ring-foreground/15",
+    divider: "from-foreground/20",
+  },
+};
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  variant?: CardVariants["variant"];
+  size?: CardVariants["size"];
+  interactive?: CardVariants["interactive"];
+  class?: string;
+  iconSize?: AccentVariants["size"];
+  showDivider?: boolean;
+  badge?: string;
+  badgeVariant?: BadgeVariants["variant"];
+  glowOnHover?: boolean;
+  href?: string;
+}
+
+const {
+  title,
+  subtitle,
+  variant = "primary",
+  size = "md",
+  interactive = false,
+  class: className,
+  iconSize = "md",
+  showDivider = true,
+  badge: badgeText,
+  badgeVariant,
+  glowOnHover = true,
+  href,
+} = Astro.props;
+
+const isInteractive = interactive || !!href;
+const Tag = href ? "a" : "article";
+const hasIcon = Astro.slots.has("icon");
+const hasBadge = Astro.slots.has("badge");
+const accentClasses = ACCENT[variant ?? "primary"];
+---
+
+<Tag
+  href={href}
+  class={card({ variant, size, interactive: isInteractive, class: className })}
+>
+  {
+    glowOnHover && (
+      <div
+        class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        aria-hidden="true"
+      >
+        <div
+          class:list={[
+            "absolute -top-1/2 -right-1/2 w-full h-full blur-3xl rounded-full opacity-20",
+            accentClasses.glow,
+          ]}
+        />
+      </div>
+    )
+  }
+
+  {/* Anillo de borde con acento en hover — reemplaza el mask::before roto */}
+  <div
+    class:list={[
+      "absolute inset-0 rounded-2xl ring-1 ring-inset opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none",
+      accentClasses.ring,
+    ]}
+    aria-hidden="true"
+  >
+  </div>
+
+  {/* Header */}
+  <header class="relative flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+    {
+      hasIcon && (
+        <div class={accent({ variant, size: iconSize })}>
+          <slot name="icon" />
+        </div>
+      )
+    }
+
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 flex-wrap">
+        <h2
+          class="text-base sm:text-lg font-semibold leading-tight tracking-tight"
+        >
+          {title}
+        </h2>
+        <div class="flex items-center gap-2 flex-wrap">
+          {
+            hasBadge ? (
+              <slot name="badge" />
+            ) : (
+              badgeText && (
+                <span class={badge({ variant: badgeVariant ?? variant })}>
+                  {badgeText}
+                </span>
+              )
+            )
+          }
+        </div>
+      </div>
+      {
+        subtitle && (
+          <p class="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            {subtitle}
+          </p>
+        )
+      }
+    </div>
+  </header>
+
+  {/* Divisor */}
+  {
+    showDivider && (
+      <div class="relative h-px mb-3 sm:mb-4 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
+        <div
+          class:list={[
+            "absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r to-transparent opacity-60",
+            accentClasses.divider,
+          ]}
+        />
+      </div>
+    )
+  }
+
+  {/* Contenido */}
+  <div
+    class="relative text-xs sm:text-sm leading-relaxed text-foreground/80 space-y-2 sm:space-y-3"
+  >
+    <slot />
+  </div>
+
+  {/* Footer */}
+  {
+    Astro.slots.has("footer") && (
+      <div class="relative mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-foreground/5">
+        <slot name="footer" />
+      </div>
+    )
+  }
+</Tag>

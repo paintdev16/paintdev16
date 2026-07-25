@@ -1,0 +1,175 @@
+---
+import { tv, type VariantProps } from "tailwind-variants";
+import { cn } from "@/lib/cn";
+
+const badge = tv({
+  base: [
+    "inline-flex items-center justify-center gap-1.5",
+    "whitespace-nowrap select-none leading-none",
+    "border transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+  ],
+
+  variants: {
+    variant: {
+      default: "bg-surface text-surface-foreground border-surface-border",
+      primary: "bg-primary-alpha text-primary border-primary-border",
+      secondary: "bg-secondary-alpha text-secondary border-secondary-border",
+      success: "bg-success-alpha text-success border-success-border",
+      danger: "bg-danger-alpha text-danger border-danger-border",
+      warning: "bg-warning-alpha text-warning border-warning-border",
+      info: "bg-info-alpha text-info border-info-border",
+    },
+
+    size: {
+      sm: "h-5 px-2 text-[11px] font-semibold tracking-wide",
+      md: "h-6 px-2.5 text-xs font-medium",
+      lg: "h-7 px-3.5 text-[13px] font-medium",
+    },
+
+    radius: {
+      pill: "rounded-full",
+      rounded: "rounded-lg",
+      square: "rounded-sm",
+    },
+
+    style: {
+      subtle: "",
+      solid: "",
+      outline: "bg-transparent",
+    },
+
+    interactive: {
+      true: "cursor-pointer hover:-translate-y-px active:translate-y-0 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+      false: "",
+    },
+  },
+
+  compoundVariants: [
+    /* ---------- SOLID ---------- */
+    {
+      variant: "default",
+      style: "solid",
+      class: "bg-foreground text-background border-foreground shadow-sm",
+    },
+    {
+      variant: "primary",
+      style: "solid",
+      class: "bg-primary text-primary-foreground border-primary shadow-sm",
+    },
+    {
+      variant: "secondary",
+      style: "solid",
+      class:
+        "bg-secondary text-secondary-foreground border-secondary shadow-sm",
+    },
+    {
+      variant: "success",
+      style: "solid",
+      class: "bg-success text-success-foreground border-success shadow-sm",
+    },
+    {
+      variant: "danger",
+      style: "solid",
+      class: "bg-danger text-danger-foreground border-danger shadow-sm",
+    },
+    {
+      variant: "warning",
+      style: "solid",
+      class: "bg-warning text-warning-foreground border-warning shadow-sm",
+    },
+    {
+      variant: "info",
+      style: "solid",
+      class: "bg-info text-info-foreground border-info shadow-sm",
+    },
+
+    /* ---------- OUTLINE ---------- */
+    {
+      variant: "default",
+      style: "outline",
+      class: "text-foreground border-border-strong hover:bg-muted",
+    },
+    {
+      variant: "primary",
+      style: "outline",
+      class: "text-primary border-primary hover:bg-primary-alpha",
+    },
+    {
+      variant: "secondary",
+      style: "outline",
+      class: "text-secondary border-secondary hover:bg-secondary-alpha",
+    },
+    {
+      variant: "success",
+      style: "outline",
+      class: "text-success border-success hover:bg-success-alpha",
+    },
+    {
+      variant: "danger",
+      style: "outline",
+      class: "text-danger border-danger hover:bg-danger-alpha",
+    },
+    {
+      variant: "warning",
+      style: "outline",
+      class: "text-warning border-warning hover:bg-warning-alpha",
+    },
+    {
+      variant: "info",
+      style: "outline",
+      class: "text-info border-info hover:bg-info-alpha",
+    },
+
+    /* ---------- INTERACTIVE: sombra sutil en hover ---------- */
+    { interactive: true, style: "subtle", class: "hover:shadow-sm" },
+    { interactive: true, style: "solid", class: "hover:shadow-md" },
+    { interactive: true, style: "outline", class: "hover:shadow-sm" },
+  ],
+
+  defaultVariants: {
+    variant: "default",
+    size: "md",
+    radius: "pill",
+    style: "subtle",
+    interactive: false,
+  },
+});
+
+type BadgeVariants = VariantProps<typeof badge>;
+
+interface Props extends BadgeVariants {
+  class?: string;
+  href?: string;
+  dot?: boolean;
+}
+
+const {
+  variant,
+  size,
+  radius,
+  style,
+  interactive,
+  class: className,
+  href,
+  dot,
+} = Astro.props;
+
+const Tag = href ? "a" : "span";
+---
+
+<Tag
+  class={cn(badge({ variant, size, radius, style, interactive }), className)}
+  {...href ? { href } : {}}
+>
+  {
+    dot && (
+      <span
+        class={cn(
+          "size-1.5 rounded-full",
+          style === "solid" ? "bg-current opacity-80" : "bg-current opacity-60",
+        )}
+      />
+    )
+  }
+  <slot />
+</Tag>

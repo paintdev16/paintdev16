@@ -1,0 +1,46 @@
+---
+import Header from "@/components/Header.astro";
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+---
+
+<!doctype html>
+<html class="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Paint</title>
+
+    <!--
+      Aplica el tema guardado ANTES del primer pintado, de forma síncrona,
+      para evitar el flash/salto de color al cargar (sobre todo notorio
+      al entrar/salir de modo oscuro). `data-astro-rerun` obliga a que
+      este script vuelva a correr en cada navegación con ClientRouter,
+      no solo en la carga inicial.
+    -->
+    <script is:inline data-astro-rerun>
+      (function () {
+        try {
+          var theme = localStorage.getItem("theme");
+          if (theme === "light" || theme === "dark") {
+            document.documentElement.setAttribute("data-theme", theme);
+          } else {
+            document.documentElement.removeAttribute("data-theme");
+          }
+        } catch (e) {
+          // localStorage no disponible (modo privado, etc.): se usa la
+          // preferencia del sistema vía color-scheme, sin romper nada.
+        }
+      })();
+    </script>
+
+    <ClientRouter />
+  </head>
+  <body class="bg-background text-foreground">
+    <Header />
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,385 @@
+---
+import { Delete, User, Users2 } from "lucide-astro";
+
+import Card from "./Card.astro";
+import Button from "./ui/Button.astro";
+---
+
+<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <!-- Básico -->
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    badgeVariant="secondary"
+  >
+    <Users2 slot="icon" />
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="danger"
+    interactive
+    href="/analytics"
+  >
+    <Delete slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="text-success font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="success"
+    interactive
+    href="/analytics"
+  >
+    <User slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+    <!-- Básico -->
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    badgeVariant="secondary"
+  >
+    <Users2 slot="icon" />
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="danger"
+    interactive
+    href="/analytics"
+  >
+    <Delete slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="text-success font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="success"
+    interactive
+    href="/analytics"
+  >
+    <User slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>  <!-- Básico -->
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    badgeVariant="secondary"
+  >
+    <Users2 slot="icon" />
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="danger"
+    interactive
+    href="/analytics"
+  >
+    <Delete slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="text-success font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="success"
+    interactive
+    href="/analytics"
+  >
+    <User slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>  <!-- Básico -->
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    badgeVariant="secondary"
+  >
+    <Users2 slot="icon" />
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="danger"
+    interactive
+    href="/analytics"
+  >
+    <Delete slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="text-success font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="success"
+    interactive
+    href="/analytics"
+  >
+    <User slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>  <!-- Básico -->
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    badgeVariant="secondary"
+  >
+    <Users2 slot="icon" />
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="danger"
+    interactive
+    href="/analytics"
+  >
+    <Delete slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="text-success font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="success"
+    interactive
+    href="/analytics"
+  >
+    <User slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>  <!-- Básico -->
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    badgeVariant="secondary"
+  >
+    <Users2 slot="icon" />
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="danger"
+    interactive
+    href="/analytics"
+  >
+    <Delete slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="text-success font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+
+  <Card
+    title="Usuarios activos"
+    subtitle="Últimos 30 días"
+    variant="info"
+    badge="+12%"
+    variant="success"
+    interactive
+    href="/analytics"
+  >
+    <User slot="icon" />
+
+    <p>1,234 usuarios han interactuado con la plataforma este mes.</p>
+
+    <div
+      slot="footer"
+      class="flex justify-between items-center text-xs text-muted-foreground"
+    >
+      <span>Actualizado hace 5 min</span>
+      <span class="font-medium">→ Ver detalles</span>
+    </div>
+  </Card>
+</div>
+
