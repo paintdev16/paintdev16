@@ -1,11 +1,157 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import Card from "@/components/Card.astro";
+import {
+  Brain, Cpu, Car, FlaskConical, Cloud, Apple, ArrowRight,
+} from "lucide-astro";
+import { getCollection, type CollectionEntry } from "astro:content";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const notas: CollectionEntry<"notas">[] = await getCollection("notas");
+notas.sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
+);
+const ultimas = notas.slice(0, 3);
+
+const iconMap: Record<string, any> = {
+  Hardware: Cpu, Apple: Apple, IA: Brain,
+  Automotriz: Car, Ciencia: FlaskConical, Cloud: Cloud,
+};
+
+const categorias = [
+  { badge: "IA", label: "Inteligencia Artificial", desc: "Modelos, agentes y el futuro del aprendizaje automático", icon: Brain, variant: "info" },
+  { badge: "Hardware", label: "Hardware", desc: "GPUs, chips cuánticos y la infraestructura de la IA", icon: Cpu, variant: "success" },
+  { badge: "Automotriz", label: "Automotriz", desc: "Vehículos autónomos y movilidad eléctrica", icon: Car, variant: "warning" },
+  { badge: "Ciencia", label: "Ciencia", desc: "Computación cuántica, biotech y fronteras de la ciencia", icon: FlaskConical, variant: "neutral" },
+  { badge: "Cloud", label: "Cloud", desc: "Infraestructura cloud, soberanía de datos y edge computing", icon: Cloud, variant: "secondary" },
+  { badge: "Apple", label: "Apple", desc: "Ecosistema Apple, iOS, hardware e inteligencia", icon: Apple, variant: "primary" },
+];
 ---
 
 <Layout>
-	Inicio
+  <section class="relative overflow-hidden border-b border-border">
+    <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-background pointer-events-none" />
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:py-24 lg:py-32 relative">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium ring-1 ring-primary/20 mb-6">
+          <span class="relative flex size-2">
+            <span class="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" />
+            <span class="relative rounded-full size-2 bg-primary" />
+          </span>
+          Tecnología en tiempo real
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4 leading-[1.1]">
+          El futuro no se espera.
+          <br />
+          <span class="text-primary">Se escribe.</span>
+        </h1>
+        <p class="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-8">
+          Paintdev16 es tu ventana a la innovación: inteligencia artificial, hardware de vanguardia, computación cuántica y el pulso de la industria tecnológica global.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="/article" class="inline-flex items-center gap-1.5 rounded-xl bg-foreground px-5 py-2.5 text-sm font-medium text-background shadow-sm hover:opacity-90 transition-all active:scale-95">
+            Explorar artículos
+            <ArrowRight class="size-4" />
+          </a>
+          <a href="#categorias" class="inline-flex items-center gap-1.5 rounded-xl border border-border px-5 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-all active:scale-95">
+            Ver categorías
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    ultimas.length > 0 && (
+      <section class="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Últimas notas</h2>
+            <p class="text-sm text-muted-foreground mt-1">Lo más reciente en tecnología</p>
+          </div>
+          <a href="/article" class="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-hover transition-colors">
+            Ver todas <ArrowRight class="size-4" />
+          </a>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {ultimas.map((nota) => {
+            const Icon = iconMap[nota.data.badge] ?? Brain;
+            return (
+              <Card
+                title={nota.data.title}
+                variant={nota.data.variant}
+                badge={nota.data.badge}
+                image={nota.data.image}
+                imageAlt={nota.data.imageAlt}
+                subtitle={nota.data.subtitle}
+                href={`/article/${nota.id}`}
+              >
+                <Fragment slot="icon"><Icon /></Fragment>
+                <p>{nota.data.summary}</p>
+                <Fragment slot="footer">
+                  <p class="text-xs text-muted-foreground">Ver nota →</p>
+                </Fragment>
+              </Card>
+            );
+          })}
+        </div>
+        <a href="/article" class="mt-6 flex sm:hidden items-center justify-center gap-1 text-sm font-medium text-primary hover:text-primary-hover transition-colors">
+          Ver todas <ArrowRight class="size-4" />
+        </a>
+      </section>
+    )
+  }
+
+  <section id="categorias" class="mx-auto max-w-6xl px-4 py-16 sm:py-20 border-t border-border">
+    <div class="mb-10">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Categorías</h2>
+      <p class="text-sm text-muted-foreground mt-1">Explora por tema</p>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {categorias.map((cat) => {
+        const count = notas.filter((n) => n.data.badge === cat.badge).length;
+        return (
+          <a
+            href={`/article#${cat.badge}`}
+            class="group relative rounded-2xl border border-border bg-surface p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+          >
+            <div class="flex items-start gap-4">
+              <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 group-hover:scale-110 transition-transform duration-200">
+                <cat.icon class="size-5" />
+              </div>
+              <div class="min-w-0">
+                <h3 class="font-semibold text-foreground mb-0.5">{cat.label}</h3>
+                <p class="text-xs text-muted-foreground leading-relaxed">{cat.desc}</p>
+                <span class="inline-block mt-2 text-xs font-medium text-primary">{count} {count === 1 ? "artículo" : "artículos"}</span>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:py-20 border-t border-border">
+    <div class="rounded-2xl bg-gradient-to-br from-surface to-background border border-border p-8 sm:p-12 shadow-sm">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-4">¿Por qué Paintdev16?</h2>
+        <p class="text-sm sm:text-base text-muted-foreground leading-relaxed mb-8">
+          Cada nota está escrita para quienes creen que la tecnología no es solo una herramienta, sino el lienzo donde se dibuja el mañana. Analizamos, curamos y contextualizamos los movimientos más importantes de la industria para que estés siempre un paso adelante.
+        </p>
+        <div class="grid grid-cols-3 gap-6 sm:gap-10">
+          <div class="text-center">
+            <p class="text-2xl sm:text-3xl font-bold text-primary">{notas.length}</p>
+            <p class="text-xs text-muted-foreground mt-1">{notas.length === 1 ? "nota publicada" : "notas publicadas"}</p>
+          </div>
+          <div class="text-center">
+            <p class="text-2xl sm:text-3xl font-bold text-primary">{categorias.length}</p>
+            <p class="text-xs text-muted-foreground mt-1">categorías</p>
+          </div>
+          <div class="text-center">
+            <p class="text-2xl sm:text-3xl font-bold text-primary">2026</p>
+            <p class="text-xs text-muted-foreground mt-1">cubriendo el presente</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout>

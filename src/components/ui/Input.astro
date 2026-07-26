@@ -1,0 +1,210 @@
+---
+import { tv, type VariantProps } from "tailwind-variants";
+import { cn } from "@/lib/cn";
+
+const inputWrapper = tv({
+  slots: {
+    base: "group flex flex-col gap-1.5",
+    label:
+      "text-sm font-medium text-foreground peer-disabled:opacity-50 peer-disabled:cursor-not-allowed",
+    input: [
+      "peer flex w-full outline-none transition-all duration-200",
+      "bg-background text-foreground placeholder:text-muted-foreground",
+      "file:inline-flex file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
+      "focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+      "disabled:cursor-not-allowed disabled:opacity-50",
+      "read-only:cursor-default read-only:opacity-80",
+    ],
+    helperText: "text-xs text-muted-foreground",
+    errorText: "text-xs text-danger",
+  },
+  variants: {
+    variant: {
+      default: {
+        input:
+          "rounded-lg border border-border px-3 focus-visible:border-ring focus-visible:ring-ring",
+      },
+      filled: {
+        input:
+          "rounded-lg border border-transparent bg-muted px-3 focus-visible:bg-background focus-visible:border-ring focus-visible:ring-ring",
+      },
+      flushed: {
+        input:
+          "rounded-none border-0 border-b-2 border-border px-0 focus-visible:border-ring focus-visible:ring-0 focus-visible:ring-offset-0",
+      },
+    },
+    size: {
+      sm: {
+        input: "h-8 text-xs [&_svg]:size-3.5",
+        label: "text-xs",
+      },
+      md: {
+        input: "h-10 text-sm [&_svg]:size-4",
+        label: "text-sm",
+      },
+      lg: {
+        input: "h-12 text-base [&_svg]:size-5",
+        label: "text-base",
+      },
+    },
+    state: {
+      none: {},
+      error: {
+        input:
+          "border-danger focus-visible:border-danger focus-visible:ring-danger",
+      },
+      warning: {
+        input:
+          "border-warning focus-visible:border-warning focus-visible:ring-warning",
+      },
+      success: {
+        input:
+          "border-success focus-visible:border-success focus-visible:ring-success",
+      },
+    },
+    hasIconStart: {
+      true: {
+        input: "pl-10",
+      },
+      false: {},
+    },
+    hasIconEnd: {
+      true: {
+        input: "pr-10",
+      },
+      false: {},
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "md",
+    state: "none",
+    hasIconStart: false,
+    hasIconEnd: false,
+  },
+});
+
+type InputVariants = VariantProps<typeof inputWrapper>;
+
+interface Props extends InputVariants {
+  type?: HTMLInputElement["type"];
+  name?: string;
+  id?: string;
+  placeholder?: string;
+  value?: string;
+  disabled?: boolean;
+  readonly?: boolean;
+  required?: boolean;
+  autocomplete?: string;
+  class?: string;
+  label?: string;
+  helperText?: string;
+  error?: string;
+}
+
+const {
+  variant,
+  size,
+  state,
+  hasIconStart = false,
+  hasIconEnd = false,
+  type = "text",
+  name,
+  id,
+  placeholder,
+  value,
+  disabled = false,
+  readonly = false,
+  required = false,
+  autocomplete,
+  class: className,
+  label,
+  helperText,
+  error,
+} = Astro.props;
+
+const resolvedState = error ? "error" : state === "none" ? undefined : state;
+
+const {
+  base,
+  label: labelStyles,
+  input,
+  helperText: helperStyles,
+  errorText,
+} = inputWrapper({
+  variant,
+  size,
+  state: resolvedState,
+  hasIconStart,
+  hasIconEnd,
+});
+---
+
+<div class={cn(base(), className)}>
+  {
+    label && (
+      <label for={id} class={labelStyles()}>
+        {label}
+        {required && <span class="ms-1 text-danger">*</span>}
+      </label>
+    )
+  }
+
+  <div class="relative">
+    {
+      hasIconStart && (
+        <span
+          class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground peer-disabled:opacity-50"
+          aria-hidden="true"
+        >
+          <slot name="icon-start" />
+        </span>
+      )
+    }
+
+    <input
+      {id ? { id } : {}}
+      {name ? { name } : {}}
+      type={type}
+      {placeholder ? { placeholder } : {}}
+      {value !== undefined ? { value } : {}}
+      disabled={disabled}
+      {readonly ? { readonly } : {}}
+      {required ? { required } : {}}
+      {autocomplete ? { autocomplete } : {}}
+      class={cn(input(), className)}
+      aria-invalid={error ? "true" : undefined}
+      aria-describedby={error
+        ? `${id}-error`
+        : helperText
+          ? `${id}-helper`
+          : undefined}
+    />
+    {
+      hasIconEnd && (
+        <span
+          class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground peer-disabled:opacity-50"
+          aria-hidden="true"
+        >
+          <slot name="icon-end" />
+        </span>
+      )
+    }
+  </div>
+
+  {
+    error && (
+      <p id={`${id}-error`} class={errorText()} role="alert">
+        {error}
+      </p>
+    )
+  }
+
+  {
+    !error && helperText && (
+      <p id={`${id}-helper`} class={helperStyles()}>
+        {helperText}
+      </p>
+    )
+  }
+</div>

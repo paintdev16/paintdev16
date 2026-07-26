@@ -1,195 +1,62 @@
 ---
 import Card from "@/components/Card.astro";
-import Badge from "@/components/ui/Badge.astro";
 import Layout from "@/layouts/Layout.astro";
 import {
-  Cpu,
-  BrainCircuit,
-  Code2,
-  Smartphone,
-  ShieldCheck,
-  Cloud,
-  Rocket,
-  Database,
+  Cpu, Apple, Brain, Car, FlaskConical, Cloud, ScanLine,
 } from "lucide-astro";
+
+import { getCollection, type CollectionEntry } from "astro:content";
+
+const iconMap: Record<string, any> = {
+  Hardware: Cpu,
+  Apple: Apple,
+  IA: Brain,
+  Automotriz: Car,
+  Ciencia: FlaskConical,
+  Cloud: Cloud,
+};
+
+const notas: CollectionEntry<"notas">[] = await getCollection("notas");
+notas.sort(
+  (a: CollectionEntry<"notas">, b: CollectionEntry<"notas">) =>
+    b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
+);
+const total = notas.length;
 ---
 
 <Layout>
-  <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3 m-2">
-    <Card
-      title="OpenAI presenta nuevas capacidades"
-      subtitle="Hace 20 minutos"
-      variant="primary"
-    >
-      <Badge slot="badge" variant="primary">IA</Badge>
-      <BrainCircuit slot="icon" />
-
-      <p>
-        Los nuevos modelos mejoran el razonamiento, la velocidad y la
-        integración con herramientas para desarrolladores y empresas.
+  <section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <header class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
+        Últimas noticias
+      </h1>
+      <p class="text-muted-foreground text-sm sm:text-base max-w-2xl">
+        {total} {total === 1 ? "artículo" : "artículos"} sobre tecnología, ciencia e innovación. Actualizado en tiempo real.
       </p>
-
-      <div
-        slot="footer"
-        class="flex items-center justify-between text-sm text-muted-foreground"
-      >
-        <span>OpenAI</span>
-        <span>Leer más →</span>
-      </div>
-    </Card>
-
-    <Card
-      title="TypeScript continúa evolucionando"
-      subtitle="Hace 1 hora"
-      variant="info"
-    >
-      <Badge slot="badge" variant="info">Programación</Badge>
-      <Code2 slot="icon" />
-
-      <p>
-        La comunidad adopta nuevas mejoras en inferencia de tipos y rendimiento
-        del compilador para proyectos modernos.
-      </p>
-
-      <div
-        slot="footer"
-        class="flex items-center justify-between text-sm text-muted-foreground"
-      >
-        <span>TypeScript</span>
-        <span>Documentación →</span>
-      </div>
-    </Card>
-
-    <Card
-      title="AMD anuncia nuevos procesadores"
-      subtitle="Hoy"
-      variant="danger"
-    >
-      <Badge slot="badge" variant="danger">Hardware</Badge>
-      <Cpu slot="icon" />
-
-      <p>
-        La nueva generación promete un mayor rendimiento por vatio y mejoras
-        para cargas de IA y videojuegos.
-      </p>
-
-      <div
-        slot="footer"
-        class="flex items-center justify-between text-sm text-muted-foreground"
-      >
-        <span>AMD</span>
-        <span>Especificaciones →</span>
-      </div>
-    </Card>
-
-    <Card
-      title="Astro mejora el rendimiento"
-      subtitle="Hace 2 horas"
-      variant="success"
-    >
-      <Badge slot="badge" variant="success">Framework</Badge>
-      <Rocket slot="icon" />
-
-      <p>
-        Las optimizaciones reducen el JavaScript enviado al cliente y aceleran
-        la generación de sitios estáticos.
-      </p>
-
-      <div
-        slot="footer"
-        class="flex items-center justify-between text-sm text-muted-foreground"
-      >
-        <span>Astro</span>
-        <span>Changelog →</span>
-      </div>
-    </Card>
-
-    <Card
-      title="Nuevas amenazas de ciberseguridad"
-      subtitle="Hace 4 horas"
-      variant="warning"
-    >
-      <Badge slot="badge" variant="warning">Seguridad</Badge>
-      <ShieldCheck slot="icon" />
-
-      <p>
-        Especialistas recomiendan habilitar autenticación multifactor y mantener
-        todas las dependencias actualizadas.
-      </p>
-
-      <div
-        slot="footer"
-        class="flex items-center justify-between text-sm text-muted-foreground"
-      >
-        <span>Seguridad</span>
-        <span>Recomendaciones →</span>
-      </div>
-    </Card>
-
-    <Card
-      title="La nube sigue creciendo"
-      subtitle="Hace 6 horas"
-      variant="secondary"
-    >
-      <Badge slot="badge" variant="secondary">Cloud</Badge>
-      <Cloud slot="icon" />
-
-      <p>
-        Cada vez más empresas migran sus aplicaciones hacia arquitecturas
-        distribuidas y servicios administrados.
-      </p>
-
-      <div
-        slot="footer"
-        class="flex items-center justify-between text-sm text-muted-foreground"
-      >
-        <span>Cloud Computing</span>
-        <span>Más información →</span>
-      </div>
-    </Card>
-
-    <Card
-      title="Bases de datos vectoriales en auge"
-      subtitle="Ayer"
-      variant="primary"
-    >
-      <Badge slot="badge" variant="primary">AI</Badge>
-      <Database slot="icon" />
-
-      <p>
-        El uso de embeddings y búsquedas semánticas continúa impulsando el
-        desarrollo de aplicaciones inteligentes.
-      </p>
-
-      <div
-        slot="footer"
-        class="flex items-center justify-between text-sm text-muted-foreground"
-      >
-        <span>Base de Datos</span>
-        <span>Leer artículo →</span>
-      </div>
-    </Card>
-
-    <Card
-      title="Android prepara nuevas funciones"
-      subtitle="Hace 8 horas"
-      variant="info"
-    >
-      <Badge slot="badge" variant="info">Mobile</Badge>
-      <Smartphone slot="icon" />
-
-      <p>
-        Las próximas versiones incorporarán mejoras en privacidad, batería e
-        integración con inteligencia artificial.
-      </p>
-
-      <div
-        slot="footer"
-        class="flex items-center justify-between text-sm text-muted-foreground"
-      >
-        <span>Android</span>
-        <span>Detalles →</span>
-      </div>
-    </Card>
-  </div>
+    </header>
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    {
+      notas.map((nota) => {
+        const Icon = iconMap[nota.data.badge] ?? ScanLine;
+        return (
+        <Card
+          title={nota.data.title}
+          variant={nota.data.variant}
+          badge={nota.data.badge}
+          image={nota.data.image}
+          imageAlt={nota.data.imageAlt}
+          subtitle={nota.data.subtitle}
+          href={`/article/${nota.id}`}
+        >
+          <Fragment slot="icon"><Icon /></Fragment>
+          <p>{nota.data.summary}</p>
+          <Fragment slot="footer">
+            <p>Ver detalle →</p>
+          </Fragment>
+        </Card>
+        );
+      })
+    }
+    </div>
+  </section>
 </Layout>

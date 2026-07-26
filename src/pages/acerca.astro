@@ -1,0 +1,222 @@
+---
+import Layout from "../layouts/Layout.astro";
+import {
+  Paintbrush,
+  Newspaper,
+  Target,
+  Users,
+  Sparkles,
+  ArrowRight,
+  Quote,
+} from "lucide-astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+const notas: CollectionEntry<"notas">[] = await getCollection("notas");
+const categorias = new Set(notas.map((n) => n.data.badge));
+
+// Clases completas y literales por cada color — Tailwind v4 requiere strings
+// estáticos para el escaneo, no se pueden construir con template literals.
+const FEATURE_STYLES = {
+  info: "bg-info/10 text-info ring-1 ring-info/20",
+  success: "bg-success/10 text-success ring-1 ring-success/20",
+  warning: "bg-warning/10 text-warning ring-1 ring-warning/20",
+} as const;
+
+const features = [
+  {
+    icon: Newspaper,
+    color: "info",
+    title: "Curado a mano",
+    text: "Cada artículo es seleccionado y escrito individualmente, no por bots. Priorizamos calidad sobre cantidad.",
+  },
+  {
+    icon: Target,
+    color: "success",
+    title: "En español",
+    text: "La mejor tecnología merece explicarse en el idioma que hablamos. Sin traducciones automáticas ni jerga innecesaria.",
+  },
+  {
+    icon: Users,
+    color: "warning",
+    title: "Sin bullshit",
+    text: "Ni clickbait, ni rumores, ni promesas vacías. Hechos, contexto y análisis. Lo que importa, sin rodeos.",
+  },
+] as const satisfies {
+  icon: typeof Newspaper;
+  color: keyof typeof FEATURE_STYLES;
+  title: string;
+  text: string;
+}[];
+---
+
+<Layout>
+  <section class="relative overflow-hidden border-b border-border">
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-primary/5 via-info/5 to-background pointer-events-none"
+    >
+    </div>
+    <div class="absolute top-10 right-10 opacity-[0.03] pointer-events-none">
+      <Paintbrush class="size-64" />
+    </div>
+
+    <div class="mx-auto max-w-4xl px-4 py-16 sm:py-20 lg:py-24 relative">
+      <div class="text-center">
+        <div
+          class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/20 mb-5 shadow-sm"
+        >
+          <Paintbrush class="size-6" />
+        </div>
+
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <h1
+            class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight"
+          >
+            Sobre Paintdev16
+          </h1>
+          <span
+            class="hidden sm:inline-flex items-center justify-center rounded-lg bg-foreground/5 border border-border px-2 py-1 font-mono text-xs text-muted-foreground tabular-nums"
+            aria-hidden="true"
+          >
+            #16
+          </span>
+        </div>
+
+        <p
+          class="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
+        >
+          Un espacio donde la tecnología deja de ser ruido y se convierte en
+          narrativa.
+        </p>
+      </div>
+    </div>
+
+    <!-- Trazo de pincel — divisor de firma, referencia literal al nombre de marca -->
+    <div class="relative h-6 sm:h-8 -mb-px" aria-hidden="true">
+      <svg
+        viewBox="0 0 1200 40"
+        preserveAspectRatio="none"
+        class="absolute inset-0 w-full h-full text-primary/25"
+      >
+        <path
+          d="M0,22 C120,8 220,32 340,18 C480,2 600,30 760,16 C900,4 1020,26 1200,12 L1200,40 L0,40 Z"
+          fill="currentColor"></path>
+      </svg>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-4 py-12 sm:py-16 lg:py-20">
+    <div
+      class="relative rounded-2xl bg-gradient-to-b from-surface to-background border border-border p-6 sm:p-8 lg:p-10 shadow-sm mb-10"
+    >
+      <div class="absolute top-4 right-4 text-primary/10">
+        <Quote class="size-12" />
+      </div>
+      <div
+        class="prose prose-neutral max-w-none relative
+        prose-headings:text-foreground prose-headings:font-semibold prose-headings:tracking-tight
+        prose-p:text-foreground/85 prose-p:leading-relaxed prose-p:text-sm sm:prose-p:text-base
+        prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+        prose-strong:text-foreground prose-strong:font-semibold
+        prose-li:marker:text-foreground/30"
+      >
+        <p
+          class="text-base sm:text-lg text-foreground/90 font-medium leading-relaxed"
+        >
+          Vivimos en la era más acelerada de la historia tecnológica. Cada día
+          nacen modelos de IA que superan a los del día anterior, chips que
+          redefinen lo posible, y movimientos geopolíticos que reconfiguran el
+          mapa de la innovación.
+        </p>
+        <p>
+          <strong>Paintdev16</strong> nace para poner orden en ese caos. No somos
+          un agregador de noticias automatizado — cada nota se escribe a mano, se
+          contextualiza y se conecta con las piezas que importan. Creemos que entender
+          tecnología no debería requerir un título en ingeniería.
+        </p>
+        <div
+          class="not-prose relative my-8 rounded-xl bg-primary/5 border border-primary/10 p-5"
+        >
+          <div class="flex items-start gap-3">
+            <Sparkles class="size-5 text-primary shrink-0 mt-0.5" />
+            <blockquote
+              class="border-none p-0 m-0 bg-transparent text-sm text-foreground/80 italic"
+            >
+              "El futuro es un lienzo en blanco, y cada innovación es una
+              pincelada que construye el panorama del mañana."
+            </blockquote>
+          </div>
+        </div>
+        <p>
+          Nuestro nombre viene de una idea simple: <em>paint</em> porque el futuro
+          se construye, se diseña, se pinta. <em>dev16</em> es un guiño a quienes
+          desarrollan, crean y dan forma a ese futuro con cada línea de código, cada
+          chip y cada idea.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid gap-4 sm:gap-5 sm:grid-cols-3 mb-10">
+      {
+        features.map((f) => (
+          <div class="group relative rounded-2xl bg-surface border border-border p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+            <div
+              class:list={[
+                "inline-flex items-center justify-center w-10 h-10 rounded-xl mb-3 transition-transform duration-200 group-hover:scale-110",
+                FEATURE_STYLES[f.color],
+              ]}
+            >
+              <f.icon class="size-5" />
+            </div>
+            <h3 class="font-semibold text-sm sm:text-base mb-1">{f.title}</h3>
+            <p class="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              {f.text}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="rounded-2xl bg-gradient-to-br from-primary/5 via-primary/[0.02] to-background border border-primary/15 p-6 sm:p-8 lg:p-10 shadow-sm"
+    >
+      <div class="grid grid-cols-3 gap-6 sm:gap-10 text-center">
+        <div class="relative">
+          <div class="text-3xl sm:text-4xl font-bold text-primary tabular-nums">
+            {notas.length}
+          </div>
+          <div class="text-xs sm:text-sm text-muted-foreground mt-1">
+            {notas.length === 1 ? "nota publicada" : "notas publicadas"}
+          </div>
+        </div>
+        <div class="relative border-x border-primary/10">
+          <div class="text-3xl sm:text-4xl font-bold text-primary tabular-nums">
+            {categorias.size}
+          </div>
+          <div class="text-xs sm:text-sm text-muted-foreground mt-1">
+            categorías
+          </div>
+        </div>
+        <div class="relative">
+          <div class="text-3xl sm:text-4xl font-bold text-primary tabular-nums">
+            2026
+          </div>
+          <div class="text-xs sm:text-sm text-muted-foreground mt-1">
+            cubriendo el presente
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 text-center">
+      <a
+        href="/article"
+        class="group inline-flex items-center gap-1.5 rounded-xl bg-foreground px-5 py-2.5 text-sm font-medium text-background shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        Explorar artículos
+        <ArrowRight
+          class="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
+        />
+      </a>
+    </div>
+  </section>
+</Layout>

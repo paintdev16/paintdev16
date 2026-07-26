@@ -1,0 +1,128 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { ArrowLeft, Clock } from "lucide-astro";
+import { getEntry, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const { getCollection } = await import("astro:content");
+  const notas = await getCollection("notas");
+  return notas.map((nota) => ({
+    params: { id: nota.id },
+  }));
+}
+
+const { id } = Astro.params;
+const nota = await getEntry("notas", id!);
+const { Content } = await render(nota!);
+
+const variant = nota!.data.variant ?? "primary";
+const badgeColors: Record<string, string> = {
+  primary: "bg-primary/10 text-primary ring-primary/20",
+  secondary: "bg-secondary/10 text-secondary ring-secondary/20",
+  success: "bg-success/10 text-success ring-success/20",
+  danger: "bg-danger/10 text-danger ring-danger/20",
+  warning: "bg-warning/10 text-warning ring-warning/20",
+  info: "bg-info/10 text-info ring-info/20",
+  neutral: "bg-muted text-muted-foreground ring-border",
+};
+const accentGradient: Record<string, string> = {
+  primary: "from-primary/30 to-primary/5",
+  secondary: "from-secondary/30 to-secondary/5",
+  success: "from-success/30 to-success/5",
+  danger: "from-danger/30 to-danger/5",
+  warning: "from-warning/30 to-warning/5",
+  info: "from-info/30 to-info/5",
+  neutral: "from-foreground/10 to-transparent",
+};
+const proseVariant: Record<string, string> = {
+  primary: "prose-a:text-primary",
+  secondary: "prose-a:text-secondary",
+  success: "prose-a:text-success",
+  danger: "prose-a:text-danger",
+  warning: "prose-a:text-warning",
+  info: "prose-a:text-info",
+  neutral: "prose-a:text-foreground",
+};
+
+const words = nota!.body?.length ?? 0;
+const readingTime = Math.max(1, Math.ceil(words / 200));
+---
+
+
+
+<Layout>
+  <article class="mx-auto max-w-3xl px-4 py-8 sm:py-12 lg:py-16">
+    <a
+      href="/article"
+      class="group inline-flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-all duration-200 mb-8 rounded-xl px-3 py-2 -ml-3 bg-surface hover:bg-muted/80 ring-1 ring-border hover:ring-border-strong shadow-sm"
+    >
+      <ArrowLeft class="size-3.5 sm:size-4 transition-transform duration-200 group-hover:-translate-x-1" />
+      Volver a artículos
+    </a>
+
+    <div class="relative mb-12 rounded-2xl bg-gradient-to-b from-surface to-background border border-border p-6 sm:p-8 lg:p-10 shadow-sm">
+      <div class={["absolute inset-0 rounded-2xl bg-gradient-to-b opacity-40 pointer-events-none", accentGradient[variant]].join(" ")} />
+
+      <header class="relative">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
+          <span class={["inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1", badgeColors[variant]].join(" ")}>
+            {nota!.data.badge}
+          </span>
+          <span class="inline-flex items-center gap-1 text-xs text-muted-foreground">
+            <Clock class="size-3" />
+            {readingTime} min de lectura
+          </span>
+          <span class="text-xs text-muted-foreground/60 hidden sm:inline" aria-hidden="true">·</span>
+          <span class="text-xs text-muted-foreground">{nota!.data.subtitle}</span>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight mb-4 leading-tight text-foreground">
+          {nota!.data.title}
+        </h1>
+
+        {
+          nota!.data.image && (
+            <div class="relative mt-8 -mx-2 sm:-mx-4 lg:-mx-6">
+              <div class="absolute -inset-1 rounded-[14px] bg-gradient-to-b from-foreground/5 to-transparent blur-sm" />
+              <img
+                src={nota!.data.image}
+                alt={nota!.data.imageAlt}
+                class="relative w-full rounded-xl sm:rounded-2xl object-cover aspect-video shadow-lg ring-1 ring-foreground/5"
+              />
+            </div>
+          )
+        }
+      </header>
+    </div>
+
+    <div class:list={[
+      "prose prose-neutral max-w-none leading-relaxed",
+      "prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground",
+      "prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4",
+      "prose-h3:text-lg sm:prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3",
+      "prose-p:leading-relaxed prose-p:text-foreground/85 prose-p:mb-5",
+      "prose-a:no-underline hover:prose-a:underline prose-a:font-medium prose-a:transition-colors",
+      "prose-code:rounded-md prose-code:bg-code-background prose-code:px-1.5 prose-code:py-0.5 prose-code:text-code-foreground prose-code:text-sm prose-code:font-mono prose-code:border prose-code:border-code-border",
+      "prose-blockquote:border-l-[3px] prose-blockquote:border-l-blockquote-border prose-blockquote:text-blockquote-foreground prose-blockquote:bg-blockquote-alpha prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-lg prose-blockquote:not-italic",
+      "prose-ul:space-y-2 prose-ul:my-5",
+      "prose-li:marker:text-foreground/30",
+      "prose-img:rounded-xl prose-img:shadow-md prose-img:ring-1 prose-img:ring-foreground/5",
+      "prose-strong:font-semibold prose-strong:text-foreground",
+      "prose-hr:border-border",
+      proseVariant[variant],
+    ]}>
+      <Content />
+    </div>
+
+    <nav class="relative mt-14 pt-8 border-t border-border">
+      <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
+      <a
+        href="/article"
+        class="group inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-xl px-4 py-2.5 bg-surface hover:bg-muted/80 ring-1 ring-border hover:ring-border-strong shadow-sm"
+      >
+        <ArrowLeft class="size-4 transition-transform duration-200 group-hover:-translate-x-1" />
+        <span>Volver a artículos</span>
+      </a>
+    </nav>
+  </article>
+</Layout>

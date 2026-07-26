@@ -4,7 +4,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 const card = tv({
   base: [
-    "group relative rounded-2xl",
+    "group relative rounded-2xl overflow-hidden",
     "p-4 sm:p-5 lg:p-6",
     "border",
     "bg-gradient-to-br",
@@ -12,7 +12,6 @@ const card = tv({
     "text-foreground",
     "transition-all duration-300 ease-out",
     "hover:shadow-xl hover:-translate-y-0.5",
-    "overflow-hidden",
   ],
   variants: {
     variant: {
@@ -126,45 +125,29 @@ type CardVariants = VariantProps<typeof card>;
 type AccentVariants = VariantProps<typeof accent>;
 type BadgeVariants = VariantProps<typeof badge>;
 type ColorVariant = NonNullable<CardVariants["variant"]>;
-
-// Antes: tres bloques `class:list` con la misma cadena de
-// `variant === "primary" && "..."` repetida (glow, ring, divisor).
-// Ahora: un único mapa de color -> clases, usado en los tres sitios.
-const ACCENT: Record<
-  ColorVariant,
-  { glow: string; ring: string; divider: string }
-> = {
-  primary: {
-    glow: "bg-primary",
-    ring: "ring-primary/20",
-    divider: "from-primary/30",
-  },
-  secondary: {
-    glow: "bg-secondary",
-    ring: "ring-secondary/20",
-    divider: "from-secondary/30",
-  },
-  success: {
-    glow: "bg-success",
-    ring: "ring-success/20",
-    divider: "from-success/30",
-  },
-  danger: {
-    glow: "bg-danger",
-    ring: "ring-danger/20",
-    divider: "from-danger/30",
-  },
-  warning: {
-    glow: "bg-warning",
-    ring: "ring-warning/20",
-    divider: "from-warning/30",
-  },
+type SizeVariant = NonNullable<CardVariants["size"]>;
+type ImageAspect = "video" | "square" | "wide" | "tall";
+const ACCENT: Record<ColorVariant, { glow: string; ring: string; divider: string }> = {
+  primary: { glow: "bg-primary", ring: "ring-primary/20", divider: "from-primary/30" },
+  secondary: { glow: "bg-secondary", ring: "ring-secondary/20", divider: "from-secondary/30" },
+  success: { glow: "bg-success", ring: "ring-success/20", divider: "from-success/30" },
+  danger: { glow: "bg-danger", ring: "ring-danger/20", divider: "from-danger/30" },
+  warning: { glow: "bg-warning", ring: "ring-warning/20", divider: "from-warning/30" },
   info: { glow: "bg-info", ring: "ring-info/20", divider: "from-info/30" },
-  neutral: {
-    glow: "bg-foreground",
-    ring: "ring-foreground/15",
-    divider: "from-foreground/20",
-  },
+  neutral: { glow: "bg-foreground", ring: "ring-foreground/15", divider: "from-foreground/20" },
+};
+
+const IMAGE_BLEED: Record<SizeVariant, string> = {
+  sm: "-mx-3 -mt-3 sm:-mx-4 sm:-mt-4",
+  md: "-mx-4 -mt-4 sm:-mx-5 sm:-mt-5 lg:-mx-6 lg:-mt-6",
+  lg: "-mx-5 -mt-5 sm:-mx-6 sm:-mt-6 lg:-mx-8 lg:-mt-8",
+};
+
+const IMAGE_ASPECT: Record<ImageAspect, string> = {
+  video: "aspect-video",
+  square: "aspect-square",
+  wide: "aspect-[21/9]",
+  tall: "aspect-[3/4]",
 };
 
 interface Props {
@@ -179,7 +162,12 @@ interface Props {
   badge?: string;
   badgeVariant?: BadgeVariants["variant"];
   glowOnHover?: boolean;
+  /** Si se pasa, toda la card queda clickeable mediante un stretched link. No genera <a> anidados. */
   href?: string;
+  /** URL de la imagen. Ignorado si se usa el slot "image". */
+  image?: string;
+  imageAlt?: string;
+  imageAspect?: ImageAspect;
 }
 
 const {
@@ -195,19 +183,52 @@ const {
   badgeVariant,
   glowOnHover = true,
   href,
+  image,
+  imageAlt = "",
+  imageAspect = "video",
 } = Astro.props;
 
 const isInteractive = interactive || !!href;
-const Tag = href ? "a" : "article";
 const hasIcon = Astro.slots.has("icon");
 const hasBadge = Astro.slots.has("badge");
+const hasImageSlot = Astro.slots.has("image");
+const hasFooter = Astro.slots.has("footer");
+const showImage = hasImageSlot || !!image;
 const accentClasses = ACCENT[variant ?? "primary"];
+const imageBleed = IMAGE_BLEED[size ?? "md"];
 ---
 
-<Tag
-  href={href}
-  class={card({ variant, size, interactive: isInteractive, class: className })}
->
+<article class={card({ variant, size, interactive: isInteractive, class: className })}>
+  {/* Stretched link — hace clickeable toda la card sin anidar <a>.
+      Va primero en el DOM y en z-0; cualquier link real dentro del
+      contenido (footer, slot por defecto, etc.) queda por encima. */}
+  {
+    href && (
+      <a href={href} class="absolute inset-0 z-0 rounded-2xl" aria-label={title}>
+        <span class="sr-only">{title}</span>
+      </a>
+    )
+  }
+
+  {/* Imagen — sangra hasta el borde de la card cancelando el padding del size */}
+  {
+    showImage && (
+      <div class:list={["relative overflow-hidden rounded-t-2xl mb-3 sm:mb-4 pointer-events-none", imageBleed]}>
+        {hasImageSlot ? (
+          <slot name="image" />
+        ) : (
+          <img
+            src={image}
+            alt={imageAlt}
+            loading="lazy"
+            decoding="async"
+            class:list={["w-full object-cover", IMAGE_ASPECT[imageAspect]]}
+          />
+        )}
+      </div>
+    )
+  }
+
   {
     glowOnHover && (
       <div
@@ -235,7 +256,7 @@ const accentClasses = ACCENT[variant ?? "primary"];
   </div>
 
   {/* Header */}
-  <header class="relative flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
+  <header class="relative flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4 pointer-events-none">
     {
       hasIcon && (
         <div class={accent({ variant, size: iconSize })}>
@@ -246,9 +267,7 @@ const accentClasses = ACCENT[variant ?? "primary"];
 
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-2 flex-wrap">
-        <h2
-          class="text-base sm:text-lg font-semibold leading-tight tracking-tight"
-        >
+        <h2 class="text-base sm:text-lg font-semibold leading-tight tracking-tight">
           {title}
         </h2>
         <div class="flex items-center gap-2 flex-wrap">
@@ -278,7 +297,7 @@ const accentClasses = ACCENT[variant ?? "primary"];
   {/* Divisor */}
   {
     showDivider && (
-      <div class="relative h-px mb-3 sm:mb-4 overflow-hidden">
+      <div class="relative h-px mb-3 sm:mb-4 overflow-hidden pointer-events-none">
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
         <div
           class:list={[
@@ -291,18 +310,17 @@ const accentClasses = ACCENT[variant ?? "primary"];
   }
 
   {/* Contenido */}
-  <div
-    class="relative text-xs sm:text-sm leading-relaxed text-foreground/80 space-y-2 sm:space-y-3"
-  >
+  <div class="relative text-xs sm:text-sm leading-relaxed text-foreground/80 space-y-2 sm:space-y-3 pointer-events-none">
     <slot />
   </div>
 
-  {/* Footer */}
+  {/* Footer — z-10 explícito para garantizar que sus links queden
+      siempre por encima del stretched link, aunque cambie el orden del DOM */}
   {
-    Astro.slots.has("footer") && (
-      <div class="relative mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-foreground/5">
+    hasFooter && (
+      <div class="relative z-10 mt-4 sm:mt-5 pt-3 sm:pt-4 border-t border-foreground/5">
         <slot name="footer" />
       </div>
     )
   }
-</Tag>
+</article>
